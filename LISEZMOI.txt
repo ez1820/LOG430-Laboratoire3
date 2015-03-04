@@ -1,0 +1,1 @@
+Attention: la derniere ligne du fichier d'entree datain.txt doit absolument avoir un retour de chariot a la fin.

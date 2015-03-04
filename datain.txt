@@ -1,0 +1,4 @@
+0001 CRI SYS001 01.01 90 PRO Nouvelle version de SIGNETS
+0002 REG SYS001 01.05 60 RIS Systeme de gestion des billets
+0003 CRI SYS003 02.04 00 DIF CRM serv. des relations avec l'industrie
+0004 REG SYS003 03.01 00 DIF Projet 4
