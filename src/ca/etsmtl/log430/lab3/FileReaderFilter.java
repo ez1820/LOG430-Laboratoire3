@@ -73,6 +73,7 @@ public class FileReaderFilter extends Thread {
 		
 	public void run() {
 		String LineOfText;
+		String formattedString = "";
 		try {
 			// Create a buffered reader the file
 			BufferedReader InFile = new BufferedReader(
@@ -91,16 +92,24 @@ public class FileReaderFilter extends Thread {
 					Done = true;
 				} else {
 					LineOfText.toUpperCase();
+					formattedString = LineOfText.substring(0, 4);
+					formattedString += " ";
+					formattedString += LineOfText.substring(5, 8);
+					formattedString += " ";
+					formattedString += LineOfText.substring(22, 24);
+					formattedString += " ";
+					formattedString += LineOfText.substring(25, 28);
+					
 					System.out.println("FileReaderFilter:: read: "
-							+ LineOfText);
+							+ formattedString);
 					try {
 						// write line of text to the pipe
-						outputPipe1.write(LineOfText, 0, LineOfText.length());
+						outputPipe1.write(formattedString, 0, formattedString.length());
 						outputPipe1.write((int) '\n');
 						// signals end of line
 						outputPipe1.flush();
 						System.out.println("FileReaderFilter:: wrote: "
-								+ LineOfText + " to outputPipe.");
+								+ formattedString + " to outputPipe.");
 					} catch (Exception Error) {
 						System.out
 						.println("FileReaderFilter:: Error writing to outputPipe.");

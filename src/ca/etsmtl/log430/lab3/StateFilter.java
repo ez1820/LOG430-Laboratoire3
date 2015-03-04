@@ -7,7 +7,7 @@ import java.io.PipedWriter;
  * This class is intended to be a filter that will key on a particular state
  * provided at instantiation.  Note that the stream has to be buffered so that
  * it can be checked to see if the specified severity appears on the stream.
- * If this string appears in the input stream, teh whole line is passed to the
+ * If this string appears in the input stream, the whole line is passed to the
  * output stream.
  * 
  * <pre>
@@ -21,8 +21,11 @@ import java.io.PipedWriter;
  *		read input pipe
  *
  *		if specified severity appears on line of text
- *			write line of text to output pipe
+ *			write line of text to accept output pipe
  *			flush pipe
+ *		else
+ *			write line of text to discard output pipe
+ *			flush pipe		
  *		end if
  *
  * end while
@@ -41,10 +44,11 @@ public class StateFilter extends Thread {
 
 	String severity;
 	PipedReader inputPipe = new PipedReader();
-	PipedWriter outputPipe = new PipedWriter();
+	PipedWriter acceptOutputPipe = new PipedWriter();
+	PipedWriter discardOutputPipe = new PipedWriter();
 
 	public StateFilter(String severity, PipedWriter inputPipe,
-			PipedWriter outputPipe) {
+			PipedWriter outputPipe1, PipedWriter outputPipe2) {
 
 		this.severity = severity;
 
@@ -55,10 +59,13 @@ public class StateFilter extends Thread {
 			System.out.println("StateFilter " + severity
 					+ ":: connected to upstream filter.");
 
-			// Connect outputPipe
-			this.outputPipe = outputPipe;
+			// Connect accept outputPipe
+			this.acceptOutputPipe = outputPipe1;
 			System.out.println("StateFilter " + severity
 					+ ":: connected to downstream filter.");
+
+			// Connect discard outputPipe
+			this.discardOutputPipe = outputPipe2;
 
 		} catch (Exception Error) {
 
@@ -104,13 +111,23 @@ public class StateFilter extends Thread {
 
 							System.out.println("StateFilter "
 									+ severity + ":: sending: "
-									+ lineOfText + " to output pipe.");
+									+ lineOfText + " to accept output pipe.");
 							lineOfText += new String(characterValue);
-							outputPipe
+							acceptOutputPipe
 									.write(lineOfText, 0, lineOfText.length());
-							outputPipe.flush();
+							acceptOutputPipe.flush();
 
 						} // if
+						else{
+
+							System.out.println("StateFilter :: sending: "
+									+ lineOfText + " to discard output pipe.");
+							lineOfText += new String(characterValue);
+							discardOutputPipe
+									.write(lineOfText, 0, lineOfText.length());
+							discardOutputPipe.flush();
+							
+						}
 
 						lineOfText = "";
 
@@ -137,9 +154,12 @@ public class StateFilter extends Thread {
 			System.out.println("StateFilter " + severity
 					+ ":: input pipe closed.");
 
-			outputPipe.close();
+			acceptOutputPipe.close();
 			System.out.println("StateFilter " + severity
 					+ ":: output pipe closed.");
+
+			discardOutputPipe.close();
+			System.out.println("StateFilter :: discard pipe closed.");
 
 		} catch (Exception error) {
 
