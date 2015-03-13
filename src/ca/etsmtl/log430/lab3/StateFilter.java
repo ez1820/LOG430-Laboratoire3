@@ -120,7 +120,7 @@ public class StateFilter extends Thread {
 						} // if
 						else{
 
-							System.out.println("StateFilter :: sending: "
+							System.out.println("StateFilter " + severity + ":: sending: "
 									+ lineOfText + " to discard output pipe.");
 							lineOfText += new String(characterValue);
 							discardOutputPipe
@@ -159,7 +159,8 @@ public class StateFilter extends Thread {
 					+ ":: output pipe closed.");
 
 			discardOutputPipe.close();
-			System.out.println("StateFilter :: discard pipe closed.");
+			System.out.println("StateFilter " + severity
+					+ ":: discard pipe closed.");
 
 		} catch (Exception error) {
 

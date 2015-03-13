@@ -1,7 +1,5 @@
 package ca.etsmtl.log430.lab3;
 
-
-
 import java.io.*;
 
 /**
@@ -16,7 +14,7 @@ import java.io.*;
  * connect to output pipe
  *
  * while not end of line
- *     if REG appears on line of text 
+ *     if REG appears on line of text
  *         write line of text to REG output pipe
  *         flush pipe
  *     else if CRI appears on line of text

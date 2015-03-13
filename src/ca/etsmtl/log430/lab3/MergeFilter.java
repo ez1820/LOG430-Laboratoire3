@@ -113,7 +113,7 @@ public class MergeFilter extends Thread {
 
 			// Loop for reading data
 
-			while (!done1 || !done2 || !done7 || !done8) {
+			while (!done1 && !done2 && !done7 && !done8) {
 				// Read pipe #1
 				if (!done1) {
 					integerCharacter1 = inputPipe1.read();
@@ -213,7 +213,7 @@ public class MergeFilter extends Thread {
 				
 				// Read pipe #8
 				if (!done8) {
-					integerCharacter8 = inputPipe1.read();
+					integerCharacter8 = inputPipe8.read();
 					characterValue8[0] = (char) integerCharacter8;
 
 					if (integerCharacter8 == -1) // pipe #1 is closed
