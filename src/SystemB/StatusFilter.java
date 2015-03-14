@@ -38,9 +38,9 @@ public class StatusFilter extends Thread {
 
 	PipedReader inputPipe = new PipedReader();
 	PipedWriter outputPipe1 = new PipedWriter();
-	PipedWriter outputPipe2 = new PipedWriter();
+	//PipedWriter outputPipe2 = new PipedWriter();
 
-	public StatusFilter(PipedWriter inputPipe, PipedWriter outputPipe1, PipedWriter outputPipe2) {
+	public StatusFilter(PipedWriter inputPipe, PipedWriter outputPipe1) {
 
 		try {
 
@@ -51,8 +51,8 @@ public class StatusFilter extends Thread {
 			// Connect OutputPipes
 
 			this.outputPipe1 = outputPipe1;
-			this.outputPipe2 = outputPipe2;
-			System.out.println("StatusFilter:: connected to downstream filters.");
+			//this.outputPipe2 = outputPipe2;
+			System.out.println("StatusFilter:: connected to downstream filter.");
 
 		} catch (Exception Error) {
 
@@ -92,39 +92,20 @@ public class StatusFilter extends Thread {
 					if (integerCharacter == '\n') { // end of line
 
 						System.out.println("StatusFilter:: received: " + lineOfText + ".");
-
-						if (lineOfText.indexOf(" REG ") != -1) {
-
-							System.out.println("StatusFilter:: sending: "
-									+ lineOfText + " to output pipe 1 (REG).");
-							lineOfText += new String(characterValue);
-							outputPipe1
-									.write(lineOfText, 0, lineOfText.length());
-							outputPipe1.flush();
-						} else if(lineOfText.indexOf(" CRI ") != -1) {
-
-							System.out.println("StatusFilter:: sending: "
-									+ lineOfText + " to output pipe 2 (CRI).");
-							lineOfText += new String(characterValue);
-							outputPipe2
-									.write(lineOfText, 0, lineOfText.length());
-							outputPipe2.flush();
- 						} // if
+						System.out.println("StatusFilter:: sending: " + lineOfText + " to output pipe.");
+						lineOfText += new String(characterValue);
+						outputPipe1.write(lineOfText, 0, lineOfText.length());
+						outputPipe1.flush();
 
 						lineOfText = "";
 
 					} else {
-
 						lineOfText += new String(characterValue);
-
 					} // if //
-
 				} // if
-
 			} // while
 
 		} catch (Exception error) {
-
 			System.out.println("StatusFilter:: Interrupted.");
 
 		} // try/catch
@@ -135,8 +116,7 @@ public class StatusFilter extends Thread {
 			System.out.println("StatusFilter:: input pipe closed.");
 
 			outputPipe1.close();
-			outputPipe2.close();
-			System.out.println("StatusFilter:: output pipes closed.");
+			System.out.println("StatusFilter:: output pipe closed.");
 
 		} catch (Exception Error) {
 

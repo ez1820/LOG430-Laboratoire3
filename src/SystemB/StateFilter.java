@@ -53,12 +53,8 @@ public class StateFilter extends Thread {
 	PipedReader inputPipe = new PipedReader();
 	PipedWriter outputPipe1 = new PipedWriter();
 	PipedWriter outputPipe2 = new PipedWriter();
-	//PipedWriter outputPipe3 = new PipedWriter();
 
-	public StateFilter(String severity, PipedWriter inputPipe,
-			PipedWriter outputPipe1, PipedWriter outputPipe2) {
-
-		this.severity = severity;
+	public StateFilter(PipedWriter inputPipe, PipedWriter outputPipe1, PipedWriter outputPipe2) {
 
 		try {
 
@@ -70,7 +66,6 @@ public class StateFilter extends Thread {
 			// Connect to all output pipes
 			this.outputPipe1 = outputPipe1;
 			this.outputPipe2 = outputPipe2;
-			//this.outputPipe3 = outputPipe3;
 			System.out.println("StateFilter " + severity
 					+ ":: connected to downstream filters.");
 
@@ -80,7 +75,6 @@ public class StateFilter extends Thread {
 					+ ":: Error connecting to other filters.");
 
 		} // try/catch
-
 	} // Constructor
 
 	// This is the method that is called when the thread is started
@@ -107,13 +101,13 @@ public class StateFilter extends Thread {
 					done = true;
 				} 
 				else{
-					if (integerCharacter == '\n'){ // end of line
+					if (integerCharacter == '\n'){ // end of line						
+						System.out.println("StateFilter " + severity
+								+ ":: received: " + lineOfText + ".");
 
 						status = lineOfText.substring(5, 8);
 						progression = Integer.parseInt(lineOfText.substring(9, 11));
-						
-						System.out.println("StateFilter " + severity
-								+ ":: received: " + lineOfText + ".");
+						severity = lineOfText.substring(12, 15);
 						
 						if(status.equals("REG")){
 							if((severity.equals("RIS") || severity.equals("DIF")) && progression < 50){								
@@ -136,7 +130,6 @@ public class StateFilter extends Thread {
 							}
 						}
 						lineOfText = "";
-
 					} 
 					else{
 						lineOfText += new String(characterValue);
@@ -146,9 +139,7 @@ public class StateFilter extends Thread {
 
 		} catch (Exception error) {
 
-			System.out.println("StateFilter::" + severity
-					+ " Interrupted.");
-
+			System.out.println("StateFilter::" + severity + " Interrupted.");
 		} // try/catch
 
 		try {
@@ -164,10 +155,6 @@ public class StateFilter extends Thread {
 			outputPipe2.close();
 			System.out.println("StateFilter " + severity
 					+ ":: output pipe2 closed.");
-
-			/*outputPipe3.close();
-			System.out.println("StateFilter " + severity
-					+ ":: output pipe3 closed.");*/
 
 		} catch (Exception error) {
 

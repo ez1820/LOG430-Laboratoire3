@@ -92,12 +92,10 @@ public class StateFilter extends Thread {
 			done = false;
 
 			while (!done) {
-
 				integerCharacter = inputPipe.read();
 				characterValue[0] = (char) integerCharacter;
 
 				if (integerCharacter == -1) { // pipe is closed
-
 					done = true;
 
 				} else {

@@ -56,28 +56,19 @@ public class SystemInitialize {
 			// These are the declarations for the pipes.
 			PipedWriter pipe01 = new PipedWriter();
 			PipedWriter pipe02 = new PipedWriter();
-			PipedWriter pipe03 = new PipedWriter();
 			PipedWriter pipe04 = new PipedWriter();
-			PipedWriter pipe05 = new PipedWriter();
-			PipedWriter pipe06 = new PipedWriter();
 			PipedWriter pipe07 = new PipedWriter();
-			PipedWriter pipe08 = new PipedWriter();
-			PipedWriter pipe09 = new PipedWriter();
 			
 			// Instantiate Filter Threads
 			Thread fileReaderFilter = new FileReaderFilter(argv[0], pipe01);
-			Thread statusFilter = new StatusFilter(pipe01, pipe02, pipe03);
-			Thread stateFilter1 = new StateFilter("RIS", pipe02, pipe04, pipe07);
-			Thread stateFilter2 = new StateFilter("DIF", pipe03, pipe05, pipe08);
-			Thread mergeFilter = new MergeFilter(pipe04, pipe05, pipe06, pipe07, pipe08, pipe09);
-			Thread fileWriterFilter = new FileWriterFilter(argv[1], argv[2], pipe06, pipe09);
+			Thread statusFilter = new StatusFilter(pipe01, pipe02);
+			Thread stateFilter1 = new StateFilter(pipe02, pipe04, pipe07);
+			Thread fileWriterFilter = new FileWriterFilter(argv[1], argv[2], pipe04, pipe07);
 
 			// Start the threads
 			fileReaderFilter.start();
 			statusFilter.start();
 			stateFilter1.start();
-			stateFilter2.start();
-			mergeFilter.start();
 			fileWriterFilter.start();
 			
 		}  // if
