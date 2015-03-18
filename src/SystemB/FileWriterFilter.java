@@ -167,7 +167,7 @@ public class FileWriterFilter extends Thread {
 
 			// SystemInitialize loop for reading data
 
-			while (!done && !done2) {
+			while (!done || !done2) {
 				// Read pipe #1
 				if (!done) {
 					integerCharacter1 = inputPipe.read();
@@ -187,7 +187,7 @@ public class FileWriterFilter extends Thread {
 						if (integerCharacter1 == '\n') // end of line
 						{
 							System.out.println("FileWriterFilter:: Received: "
-									+ lineOfText1 + " on input pipe.");
+									+ lineOfText1 + " on input pipe 1.");
 							write1 = true;
 						} else {
 							lineOfText1 += new String(characterValue1);
@@ -202,7 +202,7 @@ public class FileWriterFilter extends Thread {
 
 					if (integerCharacter2 == -1) // pipe #1 is closed
 					{
-						done = true;
+						done2 = true;
 						System.out.println("FileWriterFilter:: input pipe closed.");
 						try {
 							inputPipe.close();
@@ -214,7 +214,7 @@ public class FileWriterFilter extends Thread {
 						if (integerCharacter2 == '\n') // end of line
 						{
 							System.out.println("FileWriterFilter:: Received: "
-									+ lineOfText2 + " on input pipe.");
+									+ lineOfText2 + " on input pipe 2.");
 							write2 = true;
 						} else {
 							lineOfText2 += new String(characterValue2);
